@@ -1,0 +1,4 @@
+.DS_Store
+docker/mysql/data/
+src/vendor/
+src/.env
