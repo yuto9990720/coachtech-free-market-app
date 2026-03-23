@@ -10,7 +10,7 @@ class ItemSeeder extends Seeder
 {
     public function run(): void
     {
-        // 商品データ一覧シートに記載された10商品
+        
         $items = [
             [
                 'name'         => '腕時計',
