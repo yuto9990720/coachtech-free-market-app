@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="item-detail">
+    {{-- 左側：商品画像 --}}
     <div class="item-detail__image-wrap">
         @if (str_starts_with($item->image, 'http'))
             <img src="{{ $item->image }}" alt="{{ $item->name }}" class="item-detail__image">
@@ -10,6 +11,7 @@
         @endif
     </div>
 
+    {{-- 右側：商品情報 --}}
     <div class="item-detail__info">
         <h1 class="item-detail__name">{{ $item->name }}</h1>
 
@@ -18,30 +20,33 @@
         @endif
 
         <p class="item-detail__price">
-            <span class="item-detail__price-symbol">¥</span>{{ number_format($item->price) }}
-            <span class="item-detail__price-tax">（税込）</span>
+            ¥{{ number_format($item->price) }}
+            <span class="item-detail__price-tax">(税込)</span>
         </p>
 
+        {{-- いいね・コメント数 --}}
         <div class="item-detail__actions">
-            {{-- いいねボタン --}}
             <button
                 id="like-btn"
                 class="like-btn {{ $isLiked ? 'like-btn--active' : '' }}"
                 data-item-id="{{ $item->id }}"
-                data-liked="{{ $isLiked ? 'true' : 'false' }}"
                 @guest disabled @endguest
             >
-                <span class="like-btn__icon">♥</span>
-                <span class="like-btn__count" id="like-count">{{ $item->likes->count() }}</span>
+                @if ($isLiked)
+                    <img src="{{ asset('images/heart_pink.png') }}" alt="いいね" class="like-btn__icon">
+                @else
+                    <img src="{{ asset('images/heart_default.png') }}" alt="いいね" class="like-btn__icon">
+                @endif
+                <span id="like-count">{{ $item->likes->count() }}</span>
             </button>
 
-            {{-- コメント数 --}}
             <div class="comment-count">
-                <span class="comment-count__icon">💬</span>
-                <span class="comment-count__num" id="comment-count">{{ $item->comments->count() }}</span>
+                <img src="{{ asset('images/comment.png') }}" alt="コメント" class="comment-count__icon">
+                <span>{{ $item->comments->count() }}</span>
             </div>
         </div>
 
+        {{-- 購入ボタン --}}
         @if (!$item->is_sold)
             @auth
                 <a href="{{ route('purchase.index', $item) }}" class="btn btn--primary btn--full">購入手続きへ</a>
@@ -52,13 +57,15 @@
             <button class="btn btn--disabled btn--full" disabled>売り切れ</button>
         @endif
 
-        <section class="item-detail__section">
+        {{-- 商品説明 --}}
+        <div class="item-detail__section">
             <h2 class="item-detail__section-title">商品説明</h2>
             <p class="item-detail__description">{{ $item->description }}</p>
-        </section>
+        </div>
 
-        <section class="item-detail__section">
-            <h2 class="item-detail__section-title">商品情報</h2>
+        {{-- 商品の情報 --}}
+        <div class="item-detail__section">
+            <h2 class="item-detail__section-title">商品の情報</h2>
             <table class="item-info-table">
                 <tr>
                     <th class="item-info-table__label">カテゴリー</th>
@@ -73,22 +80,22 @@
                     <td class="item-info-table__value">{{ $item->condition->name }}</td>
                 </tr>
             </table>
-        </section>
+        </div>
 
-        <section class="item-detail__section">
-            <h2 class="item-detail__section-title">
-                コメント（<span id="comment-count-title">{{ $item->comments->count() }}</span>）
-            </h2>
+        {{-- コメント --}}
+        <div class="item-detail__section">
+            <h2 class="comment-section-title">コメント（{{ $item->comments->count() }}）</h2>
 
-            <div class="comment-list" id="comment-list">
+            <div class="comment-list">
                 @foreach ($item->comments as $comment)
                     <div class="comment">
                         <div class="comment__user">
                             @if ($comment->user->profile_image)
                                 <img src="{{ Storage::url($comment->user->profile_image) }}"
-                                     alt="{{ $comment->user->name }}" class="comment__avatar">
+                                     alt="{{ $comment->user->name }}"
+                                     class="comment__avatar">
                             @else
-                                <div class="comment__avatar comment__avatar--default"></div>
+                                <div class="comment__avatar--default"></div>
                             @endif
                             <span class="comment__username">{{ $comment->user->name }}</span>
                         </div>
@@ -98,27 +105,26 @@
             </div>
 
             @auth
+                <p class="comment-form-label">商品へのコメント</p>
                 <form action="{{ route('comment.store', $item) }}" method="POST" class="comment-form">
                     @csrf
-                    <label class="form-label" for="content">商品へのコメント</label>
                     <textarea
                         id="content"
                         name="content"
-                        rows="4"
+                        rows="5"
                         class="form-input form-textarea @error('content') form-input--error @enderror"
-                        placeholder="コメントを入力してください"
                     >{{ old('content') }}</textarea>
                     @error('content')
                         <span class="form-error">{{ $message }}</span>
                     @enderror
-                    <button type="submit" class="btn btn--secondary btn--full">コメントを送信する</button>
+                    <button type="submit" class="btn btn--primary btn--full">コメントを送信する</button>
                 </form>
             @else
                 <p class="auth-notice">
                     コメントするには<a href="{{ route('login') }}">ログイン</a>が必要です。
                 </p>
             @endauth
-        </section>
+        </div>
     </div>
 </div>
 
@@ -141,10 +147,13 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(res => res.json())
         .then(data => {
             document.getElementById('like-count').textContent = data.count;
+            const icon = likeBtn.querySelector('.like-btn__icon');
             if (data.liked) {
                 likeBtn.classList.add('like-btn--active');
+                icon.src = '{{ asset("images/heart_pink.png") }}';
             } else {
                 likeBtn.classList.remove('like-btn--active');
+                icon.src = '{{ asset("images/heart_default.png") }}';
             }
         });
     });

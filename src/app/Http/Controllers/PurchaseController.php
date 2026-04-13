@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PurchaseRequest;
 use App\Models\Item;
 use App\Models\Purchase;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -44,8 +43,15 @@ class PurchaseController extends Controller
             'building'    => $user->building,
         ]);
 
-        // Stripe決済へリダイレクト（StripeControllerで完了後に購入レコードを作成）
-        if (in_array($request->payment_method, ['convenience', 'card'])) {
+        // コンビニ払いはStripeをスキップして直接購入完了
+        if ($request->payment_method === 'convenience') {
+            self::completePurchase($item, $request->payment_method, $address);
+            Session::forget("purchase_address_{$item->id}");
+            return redirect()->route('items.index')->with('success', '購入が完了しました！');
+        }
+
+        // カード払いはStripeへ
+        if ($request->payment_method === 'card') {
             Session::put("pending_purchase_{$item->id}", [
                 'payment_method' => $request->payment_method,
                 'postal_code'    => $address['postal_code'],
@@ -53,18 +59,13 @@ class PurchaseController extends Controller
                 'building'       => $address['building'] ?? null,
             ]);
 
-            // POSTでStripeへ送信するフォームを自動サブミット
             $checkoutUrl = route('stripe.checkout', $item);
             return response()->view('purchase.stripe_redirect', [
                 'checkoutUrl' => $checkoutUrl,
             ]);
         }
 
-        // フォールバック（通常は Stripe へ遷移するため到達しない）
-        $this->completePurchase($item, $request->payment_method, $address);
-
-        Session::forget("purchase_address_{$item->id}");
-        return redirect()->route('items.index')->with('success', '購入が完了しました！');
+        return redirect()->route('items.index');
     }
 
     public static function completePurchase(Item $item, string $paymentMethod, array $address): void

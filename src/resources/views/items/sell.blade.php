@@ -2,20 +2,20 @@
 
 @section('content')
 <div class="sell-page">
-    <h1 class="page-title">商品の出品</h1>
+    <h1 class="sell-page-title">商品の出品</h1>
 
     <form action="{{ route('exhibition.store') }}" method="POST" enctype="multipart/form-data" class="sell-form">
         @csrf
 
         {{-- 商品画像 --}}
-        <section class="sell-form__section">
+        <div class="sell-form__section">
             <h2 class="sell-form__section-title">商品画像</h2>
-            <div class="image-upload">
+            <div class="form-group">
                 <label for="image" class="image-upload__label">
                     <div class="image-upload__area" id="image-preview-area">
                         <img id="image-preview" src="" alt="" style="display:none;" class="image-upload__preview">
-                        <span id="image-placeholder" class="image-upload__placeholder">
-                            画像を選択する
+                        <span id="image-placeholder">
+                            <span class="image-upload__placeholder-btn">画像を選択する</span>
                         </span>
                     </div>
                     <input type="file" id="image" name="image" accept=".jpeg,.jpg,.png" class="image-upload__input">
@@ -24,14 +24,14 @@
                     <span class="form-error">{{ $message }}</span>
                 @enderror
             </div>
-        </section>
+        </div>
 
-        {{-- 商品説明 --}}
-        <section class="sell-form__section">
+        {{-- 商品の詳細 --}}
+        <div class="sell-form__section">
             <h2 class="sell-form__section-title">商品の詳細</h2>
 
-            <div class="form-group">
-                <label class="form-label">カテゴリー</label>
+            <div class="form-group" style="margin-bottom: 24px;">
+                <span class="category-label">カテゴリー</span>
                 <div class="category-tags">
                     @foreach ($categories as $category)
                         <label class="category-tag">
@@ -67,13 +67,13 @@
                     <span class="form-error">{{ $message }}</span>
                 @enderror
             </div>
-        </section>
+        </div>
 
-        {{-- 商品名・ブランド・説明 --}}
-        <section class="sell-form__section">
+        {{-- 商品名と説明 --}}
+        <div class="sell-form__section">
             <h2 class="sell-form__section-title">商品名と説明</h2>
 
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 24px;">
                 <label class="form-label" for="name">商品名</label>
                 <input type="text" id="name" name="name" value="{{ old('name') }}"
                        class="form-input @error('name') form-input--error @enderror">
@@ -82,7 +82,7 @@
                 @enderror
             </div>
 
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 24px;">
                 <label class="form-label" for="brand">ブランド名</label>
                 <input type="text" id="brand" name="brand" value="{{ old('brand') }}"
                        class="form-input">
@@ -90,20 +90,20 @@
 
             <div class="form-group">
                 <label class="form-label" for="description">商品の説明</label>
-                <textarea id="description" name="description" rows="5"
+                <textarea id="description" name="description" rows="6"
                           class="form-input form-textarea @error('description') form-input--error @enderror"
                           >{{ old('description') }}</textarea>
                 @error('description')
                     <span class="form-error">{{ $message }}</span>
                 @enderror
             </div>
-        </section>
+        </div>
 
         {{-- 販売価格 --}}
-        <section class="sell-form__section">
+        <div class="sell-form__section">
             <h2 class="sell-form__section-title">販売価格</h2>
             <div class="form-group">
-                <label class="form-label" for="price">販売価格（円）</label>
+                <label class="form-label" for="price">販売価格</label>
                 <div class="price-input-wrap">
                     <span class="price-input-wrap__symbol">¥</span>
                     <input type="number" id="price" name="price" value="{{ old('price') }}" min="0"
@@ -113,9 +113,11 @@
                     <span class="form-error">{{ $message }}</span>
                 @enderror
             </div>
-        </section>
+        </div>
 
-        <button type="submit" class="btn btn--primary btn--full">出品する</button>
+        <div style="padding: 40px 0;">
+            <button type="submit" class="btn btn--primary btn--full">出品する</button>
+        </div>
     </form>
 </div>
 

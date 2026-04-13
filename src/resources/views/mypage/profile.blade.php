@@ -2,13 +2,14 @@
 
 @section('content')
 <div class="profile-edit">
-    <h1 class="page-title">プロフィール設定</h1>
+    <h1 class="profile-edit-title">プロフィール設定</h1>
 
     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="profile-form">
         @csrf
+        @method('POST')
 
         {{-- プロフィール画像 --}}
-        <div class="profile-image-upload">
+        <div class="profile-image-section">
             <div class="profile-image-upload__preview-wrap">
                 @if (auth()->user()->profile_image)
                     <img id="profile-preview"
@@ -96,9 +97,13 @@ document.getElementById('profile_image').addEventListener('change', function (e)
     reader.onload = function (ev) {
         const preview     = document.getElementById('profile-preview');
         const placeholder = document.getElementById('profile-preview-placeholder');
-        preview.src       = ev.target.result;
-        preview.style.display = 'block';
-        if (placeholder) placeholder.style.display = 'none';
+        if (preview) {
+            preview.src = ev.target.result;
+            preview.style.display = 'block';
+        }
+        if (placeholder) {
+            placeholder.style.display = 'none';
+        }
     };
     reader.readAsDataURL(file);
 });

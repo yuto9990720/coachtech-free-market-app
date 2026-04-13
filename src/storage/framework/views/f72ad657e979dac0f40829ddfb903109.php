@@ -10,7 +10,7 @@
     <header class="header">
         <div class="header__inner">
             <a href="<?php echo e(route('items.index')); ?>" class="header__logo">
-                <span class="header__logo-text">coachtechフリマ</span>
+                <img src="<?php echo e(asset('images/logo.png')); ?>" alt="COACHTECH">
             </a>
         </div>
     </header>
@@ -19,5 +19,4 @@
         <?php echo $__env->yieldContent('content'); ?>
     </main>
 </body>
-</html>
-<?php /**PATH /var/www/html/resources/views/layouts/auth.blade.php ENDPATH**/ ?>
+</html><?php /**PATH /var/www/html/resources/views/layouts/auth.blade.php ENDPATH**/ ?>

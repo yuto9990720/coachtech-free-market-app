@@ -11,7 +11,7 @@
     <header class="header">
         <div class="header__inner">
             <a href="<?php echo e(route('items.index')); ?>" class="header__logo">
-                <span class="header__logo-text">coachtechフリマ</span>
+                <img src="<?php echo e(asset('images/logo.png')); ?>" alt="COACHTECH">
             </a>
 
             <?php if(!request()->routeIs('login') && !request()->routeIs('register')): ?>
@@ -32,13 +32,14 @@
                 <?php if(auth()->guard()->check()): ?>
                     <form action="/logout" method="POST" class="header__logout-form">
                         <?php echo csrf_field(); ?>
-                        <button type="submit" class="header__nav-link header__nav-link--btn">ログアウト</button>
+                        <button type="submit" class="header__nav-link">ログアウト</button>
                     </form>
                     <a href="<?php echo e(route('profile.index')); ?>" class="header__nav-link">マイページ</a>
                 <?php else: ?>
                     <a href="<?php echo e(route('login')); ?>" class="header__nav-link">ログイン</a>
+                    <a href="<?php echo e(route('profile.index')); ?>" class="header__nav-link">マイページ</a>
                 <?php endif; ?>
-                <a href="<?php echo e(route('exhibition.create')); ?>" class="header__nav-btn">出品する</a>
+                <a href="<?php echo e(route('exhibition.create')); ?>" class="header__nav-btn">出品</a>
             </nav>
             <?php endif; ?>
         </div>
@@ -55,5 +56,4 @@
         <?php echo $__env->yieldContent('content'); ?>
     </main>
 </body>
-</html>
-<?php /**PATH /var/www/html/resources/views/layouts/app.blade.php ENDPATH**/ ?>
+</html><?php /**PATH /var/www/html/resources/views/layouts/app.blade.php ENDPATH**/ ?>

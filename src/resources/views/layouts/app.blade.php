@@ -11,7 +11,7 @@
     <header class="header">
         <div class="header__inner">
             <a href="{{ route('items.index') }}" class="header__logo">
-                <span class="header__logo-text">coachtechフリマ</span>
+                <img src="{{ asset('images/logo.png') }}" alt="COACHTECH">
             </a>
 
             @if (!request()->routeIs('login') && !request()->routeIs('register'))
@@ -32,13 +32,14 @@
                 @auth
                     <form action="/logout" method="POST" class="header__logout-form">
                         @csrf
-                        <button type="submit" class="header__nav-link header__nav-link--btn">ログアウト</button>
+                        <button type="submit" class="header__nav-link">ログアウト</button>
                     </form>
                     <a href="{{ route('profile.index') }}" class="header__nav-link">マイページ</a>
                 @else
                     <a href="{{ route('login') }}" class="header__nav-link">ログイン</a>
+                    <a href="{{ route('profile.index') }}" class="header__nav-link">マイページ</a>
                 @endauth
-                <a href="{{ route('exhibition.create') }}" class="header__nav-btn">出品する</a>
+                <a href="{{ route('exhibition.create') }}" class="header__nav-btn">出品</a>
             </nav>
             @endif
         </div>

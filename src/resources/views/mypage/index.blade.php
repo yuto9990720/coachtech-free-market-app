@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="mypage">
+    {{-- プロフィールヘッダー --}}
     <div class="mypage__profile">
         <div class="mypage__avatar-wrap">
             @if (auth()->user()->profile_image)
@@ -12,12 +13,11 @@
                 <div class="mypage__avatar mypage__avatar--default"></div>
             @endif
         </div>
-        <div class="mypage__user-info">
-            <p class="mypage__username">{{ auth()->user()->name }}</p>
-            <a href="{{ route('profile.edit') }}" class="btn btn--outline">プロフィールを編集する</a>
-        </div>
+        <p class="mypage__username">{{ auth()->user()->name }}</p>
+        <a href="{{ route('profile.edit') }}" class="btn btn--outline" style="margin-left: auto;">プロフィールを編集</a>
     </div>
 
+    {{-- タブ --}}
     <nav class="tab-nav">
         <a href="{{ route('profile.index', ['page' => 'sell']) }}"
            class="tab-nav__item {{ $page !== 'buy' ? 'tab-nav__item--active' : '' }}">出品した商品</a>
@@ -25,6 +25,7 @@
            class="tab-nav__item {{ $page === 'buy' ? 'tab-nav__item--active' : '' }}">購入した商品</a>
     </nav>
 
+    {{-- 商品グリッド --}}
     <div class="items-grid">
         @if ($page === 'buy')
             @forelse ($purchasedItems as $item)

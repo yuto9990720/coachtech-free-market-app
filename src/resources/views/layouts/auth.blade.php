@@ -10,7 +10,7 @@
     <header class="header">
         <div class="header__inner">
             <a href="{{ route('items.index') }}" class="header__logo">
-                <span class="header__logo-text">coachtechフリマ</span>
+                <img src="{{ asset('images/logo.png') }}" alt="COACHTECH">
             </a>
         </div>
     </header>

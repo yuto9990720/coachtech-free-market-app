@@ -1,12 +1,13 @@
 <?php $__env->startSection('content'); ?>
 <div class="profile-edit">
-    <h1 class="page-title">プロフィール設定</h1>
+    <h1 class="profile-edit-title">プロフィール設定</h1>
 
     <form action="<?php echo e(route('profile.update')); ?>" method="POST" enctype="multipart/form-data" class="profile-form">
         <?php echo csrf_field(); ?>
+        <?php echo method_field('POST'); ?>
 
         
-        <div class="profile-image-upload">
+        <div class="profile-image-section">
             <div class="profile-image-upload__preview-wrap">
                 <?php if(auth()->user()->profile_image): ?>
                     <img id="profile-preview"
@@ -143,13 +144,16 @@ document.getElementById('profile_image').addEventListener('change', function (e)
     reader.onload = function (ev) {
         const preview     = document.getElementById('profile-preview');
         const placeholder = document.getElementById('profile-preview-placeholder');
-        preview.src       = ev.target.result;
-        preview.style.display = 'block';
-        if (placeholder) placeholder.style.display = 'none';
+        if (preview) {
+            preview.src = ev.target.result;
+            preview.style.display = 'block';
+        }
+        if (placeholder) {
+            placeholder.style.display = 'none';
+        }
     };
     reader.readAsDataURL(file);
 });
 </script>
 <?php $__env->stopSection(); ?>
-
 <?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH /var/www/html/resources/views/mypage/profile.blade.php ENDPATH**/ ?>
