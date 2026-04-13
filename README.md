@@ -118,60 +118,48 @@ php artisan test --filter LoginTest
 ```mermaid
 erDiagram
     users {
-        unsigned_bigint id PK
+        bigint id PK
         string name
-        string email UK
+        string email
         timestamp email_verified_at
         string password
         string profile_image
         string postal_code
         string address
         string building
-        varchar remember_token
         timestamp created_at
         timestamp updated_at
     }
-
-    categories {
-        unsigned_bigint id PK
-        string name UK
-        timestamp created_at
-        timestamp updated_at
-    }
-
     conditions {
-        unsigned_bigint id PK
-        string name UK
-        timestamp created_at
-        timestamp updated_at
+        bigint id PK
+        string name
     }
-
+    categories {
+        bigint id PK
+        string name
+    }
     items {
-        unsigned_bigint id PK
-        unsigned_bigint user_id FK
-        unsigned_bigint condition_id FK
+        bigint id PK
+        bigint user_id FK
+        bigint condition_id FK
         string name
         string brand
         text description
+        int price
         string image
-        integer price
         boolean is_sold
         timestamp created_at
         timestamp updated_at
     }
-
     item_categories {
-        unsigned_bigint id PK
-        unsigned_bigint item_id FK
-        unsigned_bigint category_id FK
-        timestamp created_at
-        timestamp updated_at
+        bigint id PK
+        bigint item_id FK
+        bigint category_id FK
     }
-
     purchases {
-        unsigned_bigint id PK
-        unsigned_bigint user_id FK
-        unsigned_bigint item_id FK
+        bigint id PK
+        bigint user_id FK
+        bigint item_id FK
         string payment_method
         string postal_code
         string address
@@ -179,41 +167,32 @@ erDiagram
         timestamp created_at
         timestamp updated_at
     }
-
     likes {
-        unsigned_bigint id PK
-        unsigned_bigint user_id FK
-        unsigned_bigint item_id FK
+        bigint id PK
+        bigint user_id FK
+        bigint item_id FK
         timestamp created_at
         timestamp updated_at
     }
-
     comments {
-        unsigned_bigint id PK
-        unsigned_bigint user_id FK
-        unsigned_bigint item_id FK
-        text content
+        bigint id PK
+        bigint user_id FK
+        bigint item_id FK
+        string content
         timestamp created_at
         timestamp updated_at
-    }
-
-    password_reset_tokens {
-        string email PK
-        string token
-        timestamp created_at
     }
 
     users ||--o{ items : "出品する"
     users ||--o{ purchases : "購入する"
     users ||--o{ likes : "いいねする"
     users ||--o{ comments : "コメントする"
-    items }o--|| conditions : "状態を持つ"
-    items ||--o{ item_categories : "カテゴリを持つ"
-    categories ||--o{ item_categories : "商品に紐づく"
-    items ||--o{ purchases : "購入される"
+    items ||--o{ item_categories : "持つ"
+    categories ||--o{ item_categories : "持つ"
+    items ||--o| purchases : "購入される"
     items ||--o{ likes : "いいねされる"
     items ||--o{ comments : "コメントされる"
-    users ||--o{ password_reset_tokens : "リセット申請"
+    conditions ||--o{ items : "状態を持つ"
 ```
 
 ## 主な機能
